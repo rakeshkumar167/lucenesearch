@@ -21,7 +21,7 @@
     </build>
 
     <properties>
-        <lucene.version>6.6.0</lucene.version>
+        <lucene.version>8.5.0</lucene.version>
     </properties>
 
     <dependencies>
