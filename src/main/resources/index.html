@@ -1,0 +1,71 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+    <style>
+        .noVideo {
+            border: 1px solid red;
+        }
+    </style>
+    <script>
+        function search() {
+
+            var val = $('#q').val();
+            $.get("/search?q="+val, function(data, status){
+            var arr = JSON.parse(data);
+            $('#results').empty();
+            $('#msg').empty();
+            $('#msg').append("<h6>Search results for "+val+". Found "+arr.length+" records.</h6>");
+            for(var i=0;i<arr.length;i++) {
+                var el = arr[i];
+                var errorClass = '';
+                if(el.video_content_loc==null ||el.video_content_loc==""){
+                    errorClass = 'noVideo';
+                }
+                var duration = parseInt(el.video_duration);
+                var minutes = Math.floor(duration/60);
+                var seconds = duration % 60;
+
+                var result =
+                "<div class='float-left' style='padding:5px; width:215px; height:200px;'>"+
+                "<a href='"+el.video_content_loc+"'>"+
+                "<img src='"+el.img+"' width='200' height='160' class='rounded float-left "+errorClass+"'/></img>"+
+                "<br/><p><small>"+el.video_title+
+                "<br/>("+minutes+":"+seconds+")["+el.video_rating+"]</small></p>"+
+                "</a>"+
+                "</div>";
+                $('#results').append(result);
+            }
+          });
+        }
+    </script>
+</head>
+<body bgcolor="#1f2e50">
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">
+        Search
+    </a>
+</nav>
+    <div class="container">
+            <div class="form-row align-items-center" style="margin-top:30px;">
+                <div class="col-8"><input type='text' name='q' id="q" class='form-control form-control-sm'/></div>
+                <div class="col"><input type='button' value='search' class='btn btn-sm btn-success' onclick="search()"></div>
+            </div>
+        <div class="row" id="msg"></div>
+        <div class="row" id="results"></div>
+</div>
+</body>
+</html>
